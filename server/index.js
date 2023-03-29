@@ -5,15 +5,22 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const app = express();
 const db = require('./db');
+const auth = require('./middlewares/auth');
 
 const port = process.env.PORT || 3002;
 
-app.get('/data', async(req,res)=>{
-    const data = await db.query("Select * from product");
-    console.log(data.rows);
-    res.json(data.rows);
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(require('cookie-parser')());
+
+app.use('/api/v1/auth', require('./routes/auth'));
+app.use('/api/v1/products', require('./routes/product'));
+
+app.get('/user', auth, async(req,res)=>{
+    console.log(req.user);
 });
 app.get('/', async(req,res)=>{
+    console.log(db);
     res.send("hello, world!");
 });
 
