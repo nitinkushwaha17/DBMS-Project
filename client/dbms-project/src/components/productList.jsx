@@ -40,7 +40,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Grid } from '@mui/material';
-import ShopProductCard from './ProductCard';
+import ShopProductCard from './productCard';
 
 // ----------------------------------------------------------------------
 
