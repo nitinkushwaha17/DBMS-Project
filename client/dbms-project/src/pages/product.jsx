@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Container, Stack, Typography } from '@mui/material';
 // components
 import ProductList from '../components/productList'
-import ProductSort from '../components/productSort'
+import ProductSort from '../components/ProductSort'
 import ProductFilterSidebar from '../components/productFilterSidebar';
 // mock
 // import PRODUCTS from '../_mock/products';
