@@ -1,13 +1,62 @@
+/** @jsxImportSource @emotion/react */
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Navbar from './components/navbar'
+import ProductList from './components/productList'
+import { Box } from '@mui/system'
+import {css} from '@emotion/react'
+import { Toolbar, Container } from '@mui/material'
+import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import Filterbar from './components/filterbar'
+import ProductPage from './pages/product'
+import Cart from './pages/cart'
+import Boilerplate from './pages/boilerplate'
+
+const classes = {
+  main: `
+    width: 100%;
+    margin-left: auto;
+    box-sizing: border-box;
+    margin-right: auto;
+    display: block;
+    padding-left: 16px;
+    padding-right: 16px;
+    @media (min-width: 600px){
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  `
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/">
+        <Route element={<Boilerplate />}>
+        {/* <Route path="login" element={<Login />} /> */}
+        <Route index element={<ProductPage />} />
+        <Route path="/cart" element={<Cart />} />
+        {/* <Route element={<PrivateRoute />}>
+        </Route> */}
+        </Route>
+      </Route>
+    )
+  )
 
   return (
-    <div className="App">
+    <>
+    <Toolbar />
+    <RouterProvider router={router} />    
+    <Toolbar />
+    {/* <Container css={css(classes.main)}>
+      <Filterbar />
+      <ProductList />
+    </Container> */}
+    {/* <div className="App">
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -28,7 +77,8 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </div>
+    </div> */}
+    </>
   )
 }
 
