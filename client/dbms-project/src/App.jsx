@@ -17,6 +17,8 @@ import Boilerplate from './pages/boilerplate'
 import ProductDetail from './pages/productDetail'
 import CreateProduct from './pages/createProduct'
 import EditProduct from './pages/editProduct'
+import Login from './pages/login'
+import Register from './pages/register'
 
 const classes = {
   main: `
@@ -40,6 +42,8 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route element={<Boilerplate />}>
         {/* <Route path="login" element={<Login />} /> */}
         <Route index element={<ProductPage />} />
@@ -57,9 +61,7 @@ function App() {
   return (
     <>
     <CssBaseline />
-    <Toolbar />
     <RouterProvider router={router} />    
-    <Toolbar />
     {/* <Container css={css(classes.main)}>
       <Filterbar />
       <ProductList />

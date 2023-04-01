@@ -6,9 +6,11 @@ export default function PrivateRoute(){
     return (
         <>
             <Navbar />
+            <Toolbar />
             <Container>
                 <Outlet />
             </Container>
+            <Toolbar />
             {/* <Box component="main" sx={{ display: 'flex' }}>
                 <Drawer />
                 <Outlet sx={{flexGrow: 1}}/>
