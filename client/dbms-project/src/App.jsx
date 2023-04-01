@@ -35,7 +35,7 @@ function App() {
         {/* <Route path="login" element={<Login />} /> */}
         <Route index element={<ProductPage />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/prod" element={<ProductDetail />} />
+        <Route path="/prod/:id" element={<ProductDetail />} />
         <Route path="/new" element={<CreateProduct />} />
         <Route path="/edit" element={<EditProduct />} />
         {/* <Route element={<PrivateRoute />}>

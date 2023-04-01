@@ -4,7 +4,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const classes = {
     img: `
@@ -95,24 +97,33 @@ const options = ['Option 1', 'Option 2'];
 export default function ProductDetail(){
     const [color, setColor] = useState("red");
     const [size, setSize] = useState(5);
+    const [product, setProduct] = useState();
+    let { id } = useParams();
     // const [inputValue, setInputValue] = React.useState('');
 
     const handleChange = (event)=>{
-        // console.log(event.target.set);
         setColor(event.target.value);
     }
+
+    useEffect(()=>{
+        axios.get(`/products/${id}`)
+        .then((response)=>setProduct(response.data))
+        .catch((error)=>console.error(error))
+    }, []);
+
+    if(!product) return <p>Loading...</p>;
 
     return(
         <>
             <Typography variant='h4' m={3} css={css(classes.heading)}>Product Details</Typography>
             <Grid container css={css(classes.grid)} spacing={2}>
                 <Grid item xs={12} md={6} lg={7}>
-                    <img css={css(classes.img)} src="https://api-prod-minimal-v4.vercel.app/assets/images/products/product_6.jpg" />
+                    <img css={css(classes.img)} src={product.img} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                     <Box css={css(classes.details)}>
-                        <Typography variant="h5" fontWeight={700}>
-                        Jordan Delta
+                        <Typography variant="h5" fontWeight={700} textTransform="capitalize">
+                        {product.name}
                         </Typography>
                         <Stack direction="row" alignItems="center">
                             <Rating name="read-only" value={5} readOnly />
@@ -121,7 +132,7 @@ export default function ProductDetail(){
                             </Typography>
                         </Stack>
                         <Typography variant="h4">
-                        $26.92
+                        Rs {product.price}
                         </Typography>
                         <Divider />
                         <Stack direction="row" alignItems="center" justifyContent="space-between">

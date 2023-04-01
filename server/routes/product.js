@@ -34,7 +34,7 @@ router.route('/:id')
         if(!product.rows.length){
             return res.status(404).send("Product not found");
         }
-        res.status(200).json(product.rows);
+        res.status(200).json(product.rows[0]);
     }
     catch(err){
         res.status(500).send(err.message);
