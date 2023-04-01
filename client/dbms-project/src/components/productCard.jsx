@@ -25,7 +25,7 @@ export default function ShopProductCard({ product }) {
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link component={RouterLink} to="/prod" color="inherit" underline="hover">
-          <Typography variant="subtitle2" fontWeight={700} noWrap>
+          <Typography variant="subtitle2" fontWeight={700} textTransform="capitalize" noWrap>
             {name}
           </Typography>
         </Link>
