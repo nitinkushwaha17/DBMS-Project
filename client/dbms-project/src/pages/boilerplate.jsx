@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import { Container } from '@mui/material';
+import { Container, Toolbar } from '@mui/material';
 import Navbar from "../components/navbar"
 
 export default function PrivateRoute(){
