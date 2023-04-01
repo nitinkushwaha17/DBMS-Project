@@ -13,6 +13,7 @@ import Filterbar from './components/filterbar'
 import ProductPage from './pages/product'
 import Cart from './pages/cart'
 import Boilerplate from './pages/boilerplate'
+import ProductDetail from './pages/productDetail'
 
 const classes = {
   main: `
@@ -40,6 +41,7 @@ function App() {
         {/* <Route path="login" element={<Login />} /> */}
         <Route index element={<ProductPage />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/prod" element={<ProductDetail />} />
         {/* <Route element={<PrivateRoute />}>
         </Route> */}
         </Route>
