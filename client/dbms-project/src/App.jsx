@@ -14,6 +14,8 @@ import ProductPage from './pages/product'
 import Cart from './pages/cart'
 import Boilerplate from './pages/boilerplate'
 import ProductDetail from './pages/productDetail'
+import CreateProduct from './pages/createProduct'
+import EditProduct from './pages/editProduct'
 
 const classes = {
   main: `
@@ -42,6 +44,8 @@ function App() {
         <Route index element={<ProductPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/prod" element={<ProductDetail />} />
+        <Route path="/new" element={<CreateProduct />} />
+        <Route path="/edit" element={<EditProduct />} />
         {/* <Route element={<PrivateRoute />}>
         </Route> */}
         </Route>
