@@ -4,11 +4,13 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
+var cors = require('cors')
 const db = require('./db');
 const auth = require('./middlewares/auth');
 
 const port = process.env.PORT || 3002;
 
+app.use(cors())
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(require('cookie-parser')());

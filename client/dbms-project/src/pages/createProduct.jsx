@@ -3,6 +3,7 @@ import { Button, Paper, Typography, Grid, TextField, FormControl, InputLabel, Ou
 import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import ProductForm from "../components/productForm";
+import axios from 'axios';
 
 const classes = {
     heading: `
@@ -32,7 +33,7 @@ export default function CreateProduct(){
         },
         onSubmit: (values) => {
           console.log(values);
-          axios.post('/add/dept', values)
+          axios.post('/products', values)
           .then((response)=>{
               console.log(response);
           }).catch((err) => {

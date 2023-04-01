@@ -19,22 +19,9 @@ import CreateProduct from './pages/createProduct'
 import EditProduct from './pages/editProduct'
 import Login from './pages/login'
 import Register from './pages/register'
+import axios from 'axios';
 
-const classes = {
-  main: `
-    width: 100%;
-    margin-left: auto;
-    box-sizing: border-box;
-    margin-right: auto;
-    display: block;
-    padding-left: 16px;
-    padding-right: 16px;
-    @media (min-width: 600px){
-      padding-left: 24px;
-      padding-right: 24px;
-    }
-  `
-}
+axios.defaults.baseURL = "http://localhost:3002/api/v1/";
 
 function App() {
   const [count, setCount] = useState(0);

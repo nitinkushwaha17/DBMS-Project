@@ -21,9 +21,29 @@ export default function ProductForm(props){
         <Grid container css={css(classes.grid)} spacing={2}>
             <Grid item xs={12} md={8}>
                 <Paper sx={{padding:4}}>
-                    <TextField sx={{width:"100%"}} label="Product Name"/>
-                    <TextField multiline sx={{width:"100%", mt:3}} inputProps={{sx:{minHeight: "200px", maxHeight: "200px", overflow:"scroll !important"}}} label="Description"/>
-                    <TextField sx={{width:"100%", mt:3}} label="Image url"/>
+                    <TextField
+                        sx={{width:"100%"}}
+                        name="name"
+                        label="Product Name" 
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                    />
+                    <TextField
+                        multiline
+                        name="desc"
+                        label="Description"
+                        value={formik.values.desc}
+                        onChange={formik.handleChange}
+                        sx={{width:"100%", mt:3}}
+                        inputProps={{sx:{minHeight: "200px", maxHeight: "200px", overflow:"scroll !important"}}}
+                        />
+                    <TextField
+                        name="image"
+                        label="Image url"
+                        value={formik.values.image}
+                        onChange={formik.handleChange}
+                        sx={{width:"100%", mt:3}}
+                    />
                 </Paper>
             </Grid>
             <Grid item xs={12} md={4}>
@@ -32,9 +52,12 @@ export default function ProductForm(props){
                         <InputLabel htmlFor="stock">Stock</InputLabel>
                         <OutlinedInput
                             id="stock"
+                            name="stock"
                             label="Stock"
                             placeholder="0"
                             type="number"
+                            value={formik.values.stock}
+                            onChange={formik.handleChange}
                         />
                     </FormControl>
                     <FormControl fullWidth sx={{mt:3}}>
@@ -42,9 +65,12 @@ export default function ProductForm(props){
                         <OutlinedInput
                             id="regular-price"
                             startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
+                            name="mrp"
                             label="Regular Price"
                             placeholder="00"
                             type="number"
+                            value={formik.values.mrp}
+                            onChange={formik.handleChange}
                         />
                     </FormControl>
                     <FormControl fullWidth sx={{ mt: 3 }}>
@@ -52,13 +78,23 @@ export default function ProductForm(props){
                         <OutlinedInput
                             id="sale-price"
                             startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
+                            name="price"
                             label="Sale Price"
                             placeholder="00"
                             type="number"
+                            value={formik.values.price}
+                            onChange={formik.handleChange}
                         />
                     </FormControl>
                 </Paper>
-                <Button size="large" variant="contained" css={css(classes.btn)}>Create Product</Button>
+                <Button
+                    size="large"
+                    variant="contained"
+                    onClick={formik.handleSubmit}
+                    css={css(classes.btn)}
+                >
+                    Create Product
+                </Button>
             </Grid>
         </Grid>
     )

@@ -14,7 +14,16 @@ router.route('/')
 })
 .post(async(req, res) => {
     console.log(req.body);
-    res.status(201).send("Product created successfully");
+    try{
+        // TODO: add supplier id
+        // const product = await db.query('INSERT INTO product(name, mrp, price, description, stock, img) VALUES($1, $2, $3, $4, $5, $6)', 
+        // [req.body.name, req.body.mrp, req.body.price, req.body.desc, req.body.stock, req.body.image]);
+        // console.log(product);
+        res.status(201).send("Product created successfully");
+    }
+    catch(err){
+        res.status(500).send(err.message);
+    }
 })
 
 
