@@ -17,6 +17,7 @@ app.use(require('cookie-parser')());
 
 app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/products', require('./routes/product'));
+app.use('/api/v1/cart', require('./routes/cart'));
 
 app.get('/user', auth, async(req,res)=>{
     console.log(req.user);

@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useFormik } from 'formik';
 
 const classes = {
     img: `
@@ -111,6 +112,22 @@ export default function ProductDetail(){
         .catch((error)=>console.error(error))
     }, []);
 
+    const formik = useFormik({
+        initialValues: {
+          product_id: id,
+          quantity: 1
+        },
+        onSubmit: (values) => {
+          console.log(values);
+          axios.post('/cart', values)
+          .then((response)=>{
+              console.log(response);
+          }).catch((err) => {
+              console.log(err);
+          })
+        },
+    });
+
     if(!product) return <p>Loading...</p>;
 
     return(
@@ -164,11 +181,11 @@ export default function ProductDetail(){
                             <Typography variant="h6">Quantity</Typography>
                             <Box css={css(classes.countBox)}>
                                 <Box css={css(classes.count)}>
-                                    <IconButton size="small">
+                                    <IconButton size="small" onClick={()=>{formik.setValues({...formik.values, quantity: formik.values.quantity-1})}}>
                                         <RemoveIcon />
                                     </IconButton>
-                                    1
-                                    <IconButton size="small">
+                                    {formik.values.quantity}
+                                    <IconButton size="small" onClick={()=>{formik.setValues({...formik.values, quantity: formik.values.quantity+1})}}>
                                         <AddIcon />
                                     </IconButton>
                                 </Box>
@@ -176,7 +193,7 @@ export default function ProductDetail(){
                         </Stack>
                         <Divider />
                         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-                            <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(255, 171, 0)'}}>Add To Cart</Button>
+                            <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(255, 171, 0)'}} onClick={formik.handleSubmit}>Add To Cart</Button>
                             <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(0, 171, 85)'}}>Buy Now</Button>
                         </Stack>
                     </Box>
