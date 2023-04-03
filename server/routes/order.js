@@ -5,8 +5,8 @@ const db = require('../db');
 router.route('/')
 .get(async(req, res) => {
     try{
-        const orders = await db.query('SELECT * FROM orders WHERE customer_id = $1', [1]);
-        res.status(200).json(orders);
+        const orders = await db.query('SELECT * FROM orders JOIN order_items ON id=order_id JOIN product p ON p.id=product_id WHERE customer_id = $1 ORDER BY order_id DESC', [1]);
+        res.status(200).json(orders.rows);
     }
     catch(err){
         console.error(err);

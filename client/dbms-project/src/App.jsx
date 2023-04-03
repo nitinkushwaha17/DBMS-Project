@@ -19,6 +19,7 @@ import CreateProduct from './pages/createProduct'
 import EditProduct from './pages/editProduct'
 import Login from './pages/login'
 import Register from './pages/register'
+import Orders from './pages/orders'
 import axios from 'axios';
 
 axios.defaults.baseURL = "http://localhost:3002/api/v1/";
@@ -38,6 +39,7 @@ function App() {
         <Route path="/prod/:id" element={<ProductDetail />} />
         <Route path="/new" element={<CreateProduct />} />
         <Route path="/edit" element={<EditProduct />} />
+        <Route path="/orders" element={<Orders />} />
         {/* <Route element={<PrivateRoute />}>
         </Route> */}
         </Route>
