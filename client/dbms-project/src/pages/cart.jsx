@@ -5,6 +5,8 @@ import { Box } from '@mui/system';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const classes = {
     heading: `
@@ -139,6 +141,51 @@ const classes = {
 }
 
 export default function cart(){
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [subTotal, setSubTotal] = useState(0);
+    const [changingQuantity, setChangingQuantity] = useState(false);
+
+    useEffect(()=>{
+        axios.get('/cart')
+        .then((response)=>{
+            setProducts(response.data);
+        })
+        .catch((error)=>{console.log(error)})
+        .finally(()=>{setLoading(false)});
+    }, []);
+    
+    useEffect(()=>{
+        setSubTotal(products.reduce((a,b)=>a+(b.price*b.quantity), 0));
+    }, [products]);
+
+    const handleDelete = (product_id) => {
+        console.log(product_id)
+        axios.delete(`/cart/${product_id}`)
+        .then((response)=>{
+            console.log(response)
+            const remainingProducts = products.filter((product) => product_id !== product.id);
+            setProducts(remainingProducts);
+        })
+        .catch((error)=>{console.log(error)});
+    }
+
+    const changeQuantity = (product, val) => {
+        setChangingQuantity(true);
+        axios.put(`/cart/${product.id}`, {quantity: product.quantity+val})
+        .then((response)=>{
+            console.log(response)
+            if(response.status==200){
+                const idx = products.findIndex((p)=>p.id==product.id);
+                const updatedProduct = Object.assign({}, products[idx]);
+                updatedProduct.quantity+=val;
+                setProducts([...products.slice(0, idx), updatedProduct, ...products.slice(idx+1)]);
+            }
+        })
+        .catch((err)=>{console.log(err)})
+        .finally(()=>{setChangingQuantity(false)});
+    }
+    
     return(
         <>
         <Typography variant='h4' m={3} css={css(classes.heading)}>Checkout</Typography>
@@ -149,7 +196,7 @@ export default function cart(){
                         <Typography variant='h6' css={css(classes.cardTitle)}>
                             Cart&nbsp;
                             <Typography variant='span'>
-                                (0 items)
+                                ({products.length} items)
                             </Typography>
                         </Typography>
                     </CardContent>
@@ -165,38 +212,45 @@ export default function cart(){
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow>
+                            {loading?<>Loading...</>:
+                                products.map(product => (
+                                <TableRow key={product.id}>
                                     <TableCell css={css(classes.cell, classes.cell1)}>
                                         <Box css={css(classes.imgBox)}>
-                                            <img src="https://api-prod-minimal-v4.vercel.app/assets/images/products/product_6.jpg" css={css(classes.img)}></img>
+                                            <img src={product.img} css={css(classes.img)} />
                                         </Box>
                                         <Typography variant='subtitle2' css={css(classes.prodName)}>Nike air jordan</Typography>
                                     </TableCell>
                                     <TableCell css={css(classes.cell)}>
-                                        $49.90
+                                        Rs{product.price}
                                     </TableCell>
                                     <TableCell css={css(classes.cell)}>
                                         <Box css={css(classes.countBox)}>
                                             <Box css={css(classes.count)}>
-                                                <IconButton size="small">
+                                            {changingQuantity?<p>...</p>:
+                                                <>
+                                                <IconButton size="small" onClick={()=>{changeQuantity(product, -1)}}>
                                                     <RemoveIcon />
                                                 </IconButton>
-                                                1
-                                                <IconButton size="small">
+                                                {product.quantity}
+                                                <IconButton size="small" onClick={()=>{changeQuantity(product, 1)}}>
                                                     <AddIcon />
                                                 </IconButton>
+                                                </>
+                                            }
                                             </Box>
                                         </Box>
                                     </TableCell>
                                     <TableCell css={css(classes.cell)}>
-                                        $49.90
+                                        Rs{product.price*product.quantity}
                                     </TableCell>
                                     <TableCell css={css(classes.cell)}>
-                                        <IconButton size="small">
+                                        <IconButton size="small" onClick={()=>{handleDelete(product.id)}}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
+                            ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -211,7 +265,7 @@ export default function cart(){
                         <Stack direction="column" gap={3}>
                             <Stack direction="row" justifyContent="space-between">
                                 <Typography variant="body2">Sub Total</Typography>
-                                <Typography variant="subtitle2">$270.54</Typography>
+                                <Typography variant="subtitle2">Rs{subTotal}</Typography>
                             </Stack>
                             <Stack direction="row" justifyContent="space-between">
                                 <Typography variant="body2">Discount</Typography>
@@ -224,7 +278,7 @@ export default function cart(){
                             <Divider />
                             <Stack direction="row" justifyContent="space-between">
                                 <Typography variant="subtitle1">Total</Typography>
-                                <Typography variant="subtitle1" sx={{color: "rgb(255, 86, 48)"}}>$270.54</Typography>
+                                <Typography variant="subtitle1" sx={{color: "rgb(255, 86, 48)"}}>Rs{subTotal}</Typography>
                             </Stack>
                         </Stack>
                     </CardContent>
