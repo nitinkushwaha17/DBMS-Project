@@ -185,6 +185,12 @@ export default function cart(){
         .catch((err)=>{console.log(err)})
         .finally(()=>{setChangingQuantity(false)});
     }
+
+    const checkOut = () => {
+        axios.post('/order')
+        .then((response)=>{console.log(response)})
+        .catch((err)=>{console.log(err)});
+    }
     
     return(
         <>
@@ -283,7 +289,7 @@ export default function cart(){
                         </Stack>
                     </CardContent>
                 </Card>
-                <Button css={css(classes.checkoutbtn)}>Check Out</Button>
+                <Button css={css(classes.checkoutbtn)} onClick={checkOut}>Check Out</Button>
             </Grid>
         </Grid>
         </>

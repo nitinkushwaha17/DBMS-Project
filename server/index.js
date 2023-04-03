@@ -18,12 +18,12 @@ app.use(require('cookie-parser')());
 app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/products', require('./routes/product'));
 app.use('/api/v1/cart', require('./routes/cart'));
+app.use('/api/v1/order', require('./routes/order'));
 
 app.get('/user', auth, async(req,res)=>{
     console.log(req.user);
 });
 app.get('/', async(req,res)=>{
-    console.log(db);
     res.send("hello, world!");
 });
 
