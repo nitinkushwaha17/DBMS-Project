@@ -91,6 +91,7 @@ const classes = {
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 240px;
+        text-transform: capitalize;
     `,
     countBox: `
         width: 96px;
@@ -225,7 +226,7 @@ export default function cart(){
                                         <Box css={css(classes.imgBox)}>
                                             <img src={product.img} css={css(classes.img)} />
                                         </Box>
-                                        <Typography variant='subtitle2' css={css(classes.prodName)}>Nike air jordan</Typography>
+                                        <Typography variant='subtitle2' css={css(classes.prodName)}>{product.name}</Typography>
                                     </TableCell>
                                     <TableCell css={css(classes.cell)}>
                                         Rs{product.price}
