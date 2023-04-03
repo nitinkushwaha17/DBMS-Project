@@ -7,6 +7,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { show } from '../features/snackbarSlice';
 
 const classes = {
     heading: `
@@ -142,6 +144,7 @@ const classes = {
 }
 
 export default function cart(){
+    const dispatch = useDispatch();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [subTotal, setSubTotal] = useState(0);
@@ -189,7 +192,10 @@ export default function cart(){
 
     const checkOut = () => {
         axios.post('/order')
-        .then((response)=>{console.log(response)})
+        .then((response)=>{
+            console.log(response);
+            dispatch(show("Ordered successfully"));
+        })
         .catch((err)=>{console.log(err)});
     }
     

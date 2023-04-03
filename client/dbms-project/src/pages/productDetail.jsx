@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { show } from '../features/snackbarSlice';
 
 const classes = {
     img: `
@@ -96,6 +98,8 @@ const CheckedIcon = (
 const options = ['Option 1', 'Option 2'];
 
 export default function ProductDetail(){
+    const dispatch = useDispatch();
+
     const [color, setColor] = useState("red");
     const [size, setSize] = useState(5);
     const [product, setProduct] = useState();
@@ -122,6 +126,7 @@ export default function ProductDetail(){
           axios.post('/cart', values)
           .then((response)=>{
               console.log(response);
+              dispatch(show("Product added to cart"));
           }).catch((err) => {
               console.log(err);
           })

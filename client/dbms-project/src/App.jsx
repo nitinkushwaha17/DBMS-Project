@@ -8,7 +8,7 @@ import Navbar from './components/navbar'
 import ProductList from './components/productList'
 import { Box } from '@mui/system'
 import {css} from '@emotion/react'
-import { Toolbar, Container } from '@mui/material'
+import { Snackbar, Alert } from '@mui/material'
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import Filterbar from './components/filterbar'
 import ProductPage from './pages/product'
@@ -21,11 +21,25 @@ import Login from './pages/login'
 import Register from './pages/register'
 import Orders from './pages/orders'
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { close } from './features/snackbarSlice';
 
 axios.defaults.baseURL = "http://localhost:3002/api/v1/";
 
 function App() {
+  const dispatch = useDispatch();
+
   const [count, setCount] = useState(0);
+
+  const open = useSelector(state => state.snackbar.open);
+  const message = useSelector(state => state.snackbar.message);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    dispatch(close());
+  };
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -50,7 +64,12 @@ function App() {
   return (
     <>
     <CssBaseline />
-    <RouterProvider router={router} />    
+    <RouterProvider router={router} />   
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+        {message}
+      </Alert>
+    </Snackbar> 
     {/* <Container css={css(classes.main)}>
       <Filterbar />
       <ProductList />
