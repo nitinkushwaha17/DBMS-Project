@@ -40,5 +40,20 @@ router.route('/:id')
         res.status(500).send(err.message);
     }
 })
+.put(async(req, res)=>{
+    try{
+        const product = await db.query("UPDATE product SET name = $1, description = $2, mrp = $3, price = $4, stock = $5, img = $6 WHERE id = $7",
+        [req.body.name, req.body.desc, req.body.mrp, req.body.price, req.body.stock, req.body.image, req.params.id]);
+        if(!product.rowCount){
+            return res.status(404).send("product not found");
+        }
+
+        res.status(200).send("product updated");
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send(err.message);
+    }
+})
 
 module.exports = router;

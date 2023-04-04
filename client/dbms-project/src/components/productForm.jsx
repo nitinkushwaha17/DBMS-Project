@@ -93,7 +93,7 @@ export default function ProductForm(props){
                     onClick={formik.handleSubmit}
                     css={css(classes.btn)}
                 >
-                    Create Product
+                    {props.btnText}
                 </Button>
             </Grid>
         </Grid>

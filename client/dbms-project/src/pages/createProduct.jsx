@@ -45,7 +45,7 @@ export default function CreateProduct(){
     return(
         <>
         <Typography variant='h4' css={css(classes.heading)}>Create new product</Typography>
-        <ProductForm formik={formik}/>
+        <ProductForm formik={formik} btnText="Create Product"/>
         </>
     )
 }

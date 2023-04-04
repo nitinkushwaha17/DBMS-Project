@@ -3,6 +3,11 @@ import { Button, Paper, Typography, Grid, TextField, FormControl, InputLabel, Ou
 import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import ProductForm from "../components/productForm";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { show } from '../features/snackbarSlice';
 
 const classes = {
     heading: `
@@ -21,30 +26,50 @@ const classes = {
 }
 
 export default function EditProduct(){
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const {id} = useParams();
+    const [product, setProduct] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(()=>{
+        axios.get(`/products/${id}`)
+        .then(response => {
+            console.log(response);
+            setProduct(response.data);
+        })
+        .catch(err => console.error(err))
+        .finally(()=>{setLoading(false)});
+    }, []);
+
     const formik = useFormik({
         initialValues: {
-          name: '',
-          desc: '',
-          mrp: '',
-          price: '',
-          stock: '',
-          image: ''
+          name: product.name,
+          desc: product.desc,
+          mrp: product.mrp,
+          price: product.price,
+          stock: product.stock,
+          image: product.img
         },
         onSubmit: (values) => {
           console.log(values);
-          axios.post('/add/dept', values)
+          axios.put(`/products/${product.id}`, values)
           .then((response)=>{
               console.log(response);
+              dispatch(show("Product updated"));
+              navigate(`/prod/${product.id}`);
           }).catch((err) => {
               console.log(err);
           })
         },
+        enableReinitialize: true
     });
 
     return(
         <>
         <Typography variant='h4' css={css(classes.heading)}>Edit product</Typography>
-        <ProductForm formik={formik}/>
+        {loading?<p>Loading...</p>:
+        <ProductForm formik={formik} btnText="Update Product"/>}
         </>
     )
 }
