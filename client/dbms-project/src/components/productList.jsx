@@ -60,14 +60,14 @@ import axios from 'axios';
 //     status: 'new'
 // };
 
-export default function ProductList() {
-  const [products, setProducts] = useState([]);
+export default function ProductList(props) {
+  const {products} = props; 
 
-  useEffect(()=>{
-    axios.get('/products')
-    .then(response=>setProducts(response.data))
-    .catch(err => console.error(err));
-  }, []);
+  // useEffect(()=>{
+  //   axios.get('/products')
+  //   .then(response=>setProducts(response.data))
+  //   .catch(err => console.error(err));
+  // }, []);
 
   if(!products.length) return <p>Loading...</p>;
 

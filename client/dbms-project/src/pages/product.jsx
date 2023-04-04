@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { Container, Stack, Typography } from '@mui/material';
 // components
 import ProductList from '../components/productList'
 import ProductSort from '../components/ProductSort'
 import ProductFilterSidebar from '../components/productFilterSidebar';
+import axios from 'axios';
 // mock
 // import PRODUCTS from '../_mock/products';
 
@@ -12,6 +13,13 @@ import ProductFilterSidebar from '../components/productFilterSidebar';
 
 export default function ProductsPage() {
   const [openFilter, setOpenFilter] = useState(false);
+  const [products, setProducts] = useState([]);
+
+  useEffect(()=>{
+    axios.get('/products')
+    .then(response=>setProducts(response.data))
+    .catch(err => console.error(err));
+  }, []);
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -34,11 +42,11 @@ export default function ProductsPage() {
               onOpenFilter={handleOpenFilter}
               onCloseFilter={handleCloseFilter}
             />
-            <ProductSort />
+            <ProductSort setProducts={setProducts}/>
           </Stack>
         </Stack>
 
-        <ProductList/>
+        <ProductList products={products}/>
         {/* <ProductCartWidget /> */}
     </>
   );

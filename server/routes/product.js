@@ -5,7 +5,21 @@ const db = require('../db');
 router.route('/')
 .get(async(req, res) => {
     try{
-        const products = await db.query('SELECT * FROM product');
+        let sortby = req.query.sortby||'newest';
+        switch(sortby){
+            case 'newest':
+                sortby='id DESC';
+                break;
+            case 'priceDesc':
+                sortby='price DESC';
+                break;
+            case 'priceAsc':
+                sortby='price ASC';
+                break;
+            default:
+                sortby='id DESC';
+        }
+        const products = await db.query(`SELECT * FROM product ORDER BY ${sortby}`);
         res.status(200).json(products.rows);
     }
     catch(err){

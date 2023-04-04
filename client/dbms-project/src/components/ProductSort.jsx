@@ -3,18 +3,20 @@ import { useState } from 'react';
 import { Menu, Button, MenuItem, Typography } from '@mui/material';
 // component
 import Iconify from './iconify';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
 const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
   { value: 'newest', label: 'Newest' },
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' },
 ];
 
-export default function ProductSort() {
+export default function ProductSort(props) {
+  const {setProducts} = props;
   const [open, setOpen] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -22,6 +24,15 @@ export default function ProductSort() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    handleClose();
+
+    axios.get(`/products?sortby=${SORT_BY_OPTIONS[index].value}`)
+    .then(response=>setProducts(response.data))
+    .catch(err => console.error(err));
   };
 
   return (
@@ -34,7 +45,7 @@ export default function ProductSort() {
       >
         Sort By:&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-          Newest
+          {SORT_BY_OPTIONS[selectedIndex].label}
         </Typography>
       </Button>
       <Menu
@@ -45,11 +56,11 @@ export default function ProductSort() {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        {SORT_BY_OPTIONS.map((option) => (
+        {SORT_BY_OPTIONS.map((option, index) => (
           <MenuItem
-            key={option.value}
-            selected={option.value === 'newest'}
-            onClick={handleClose}
+            key={index}
+            selected={index===selectedIndex}
+            onClick={(event)=>{handleMenuItemClick(event, index)}}
             sx={{ typography: 'body2' }}
           >
             {option.label}
