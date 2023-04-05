@@ -24,7 +24,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { close } from './features/snackbarSlice';
 
-axios.defaults.baseURL = "http://localhost:3002/api/v1/";
+axios.defaults.baseURL = process.env.NODE_ENV==='production'?"https://dbms-project-server.onrender.com":"http://localhost:3002/api/v1/";
 
 function App() {
   const dispatch = useDispatch();
