@@ -16,10 +16,11 @@ import AdbIcon from '@mui/icons-material/Adb';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import classes from './navbar.module.css';
 import { css } from '@emotion/react';
-import { Link } from 'react-router-dom';
+import { Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [{option: 'Create product', to: "/new"}];
+const settings = [{option: 'Orders', to: '/orders'}];
 
 const classes = {
     header: `
@@ -33,13 +34,14 @@ const classes = {
     top: 0px;
     left: auto;
     right: 0px;
-    color: rgb(33, 43, 54);
+    color: inherit;
     box-shadow: none;
     height: 64px;
     z-index: 1101;
     backdrop-filter: blur(6px);
     background-color: rgba(255, 255, 255, 0.8);
-    transition: height 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;`
+    transition: height 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    `
 }
 
 function ResponsiveAppBar() {
@@ -116,8 +118,8 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.option} onClick={handleCloseNavMenu} component={RouterLink} to={page.to}>
+                  <Typography textAlign="center">{page.option}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -144,21 +146,21 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.option}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, display: 'block', color: 'inherit', textTransform:'capitalize' }}
+                to={page.to}
+                component={RouterLink}
               >
-                {page}
+                {page.option}
               </Button>
             ))}
           </Box>
 
           <Box sx={{ display: 'flex', gap: '20px', flexGrow: 0 }}>
-                <Link to="/cart">
-                    <IconButton>
-                        <ShoppingCartIcon />
-                    </IconButton>
-                </Link>
+            <IconButton component={RouterLink} to='/cart'>
+                <ShoppingCartIcon />
+            </IconButton>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -181,8 +183,8 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.option} onClick={handleCloseUserMenu} component={RouterLink} to={setting.to}>
+                  <Typography textAlign="center">{setting.option}</Typography>
                 </MenuItem>
               ))}
             </Menu>

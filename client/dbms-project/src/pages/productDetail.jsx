@@ -10,8 +10,13 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { show } from '../features/snackbarSlice';
+import { Link as RouterLink } from 'react-router-dom';
 
 const classes = {
+    heading: `
+        font-family: 'Public Sans';
+        font-weight: 700;
+    `,
     img: `
         width: 100%;
         border-radius: 20px
@@ -198,8 +203,8 @@ export default function ProductDetail(){
                         </Stack>
                         <Divider />
                         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-                            <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(255, 171, 0)'}} onClick={formik.handleSubmit}>Add To Cart</Button>
-                            <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(0, 171, 85)'}}>Buy Now</Button>
+                            <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(0, 171, 85)'}} onClick={formik.handleSubmit}>Add To Cart</Button>
+                            <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(255, 171, 0)'}} component={RouterLink} to={`/prod/${id}/edit`}>Edit</Button>
                         </Stack>
                     </Box>
                 </Grid>
