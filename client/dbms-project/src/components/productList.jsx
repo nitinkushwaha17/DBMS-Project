@@ -43,6 +43,7 @@ import { Grid } from '@mui/material';
 import ShopProductCard from './productCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import ShopProductCardLoader from './productCardLoader';
 
 // ----------------------------------------------------------------------
 
@@ -69,15 +70,22 @@ export default function ProductList(props) {
   //   .catch(err => console.error(err));
   // }, []);
 
-  if(!products.length) return <p>Loading...</p>;
+  // if(!products.length) return <p>Loading...</p>;
 
   return (
     <Grid container spacing={3}>
-      {products.map((product) => (
+      {products.length?(products.map((product) => (
         <Grid key={product.id} item xs={12} sm={6} md={3}>
           <ShopProductCard product={product} />
         </Grid>
-      ))}
+      ))):(
+        <>
+        <Grid item xs={12} sm={6} md={3}><ShopProductCardLoader/></Grid>
+        <Grid item xs={12} sm={6} md={3}><ShopProductCardLoader/></Grid>
+        <Grid item xs={12} sm={6} md={3}><ShopProductCardLoader/></Grid>
+        <Grid item xs={12} sm={6} md={3}><ShopProductCardLoader/></Grid>
+        </>
+      )}
     </Grid>
   );
 }

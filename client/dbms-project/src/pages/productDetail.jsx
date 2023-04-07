@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { Typography, Grid, Box, Rating, Stack, Divider, RadioGroup, FormControlLabel, Radio, Select, MenuItem, IconButton, Button } from '@mui/material';
+import { Typography, Grid, Box, Rating, Stack, Divider, RadioGroup, FormControlLabel, Radio, Select, MenuItem, IconButton, Button, Skeleton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -138,38 +138,39 @@ export default function ProductDetail(){
         },
     });
 
-    if(!product) return <p>Loading...</p>;
+    // if(!product) return <p>Loading...</p>;
 
     return(
         <>
             <Typography variant='h4' m={3} css={css(classes.heading)}>Product Details</Typography>
             <Grid container css={css(classes.grid)} spacing={2}>
                 <Grid item xs={12} md={6} lg={7}>
-                    <img css={css(classes.img)} src={product.img} />
+                    {product?<img css={css(classes.img)} src={product.img} />
+                    :<Skeleton variant='rectangular' height='100%'/>}
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                     <Box css={css(classes.details)}>
                         <Typography variant="h5" fontWeight={700} textTransform="capitalize">
-                        {product.name}
+                        {product?product.name:<Skeleton />}
                         </Typography>
-                        <Stack direction="row" alignItems="center">
+                        {product?<Stack direction="row" alignItems="center">
                             <Rating name="read-only" value={5} readOnly />
                             <Typography variant="body2" ml={1}>
                             (10k reviews)
                             </Typography>
-                        </Stack>
+                        </Stack>:<Skeleton />}
                         <Typography variant="h4">
-                        Rs {product.price}
+                        {product?`Rs ${product.price}`:<Skeleton />}
                         </Typography>
                         <Divider />
-                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        {product?<Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Typography variant="h6">Color</Typography>
                             <Stack direction="row">
                                 <Radio onChange={handleChange} checked={color==="red"} icon={Icon} checkedIcon={CheckedIcon} value="red"/>
                                 <Radio onChange={handleChange} checked={color==="blue"} icon={Icon} checkedIcon={CheckedIcon} value="blue" />
                             </Stack>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        </Stack>:<Skeleton height='50px'/>}
+                        {product?<Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Typography variant="h6">Size</Typography>
                             <Select
                                 labelId="demo-simple-select-label"
@@ -186,8 +187,8 @@ export default function ProductDetail(){
                                 <MenuItem value={9}>9</MenuItem>
                                 <MenuItem value={10}>10</MenuItem>
                             </Select>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        </Stack>:<Skeleton height='50px'/>}
+                        {product?<Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Typography variant="h6">Quantity</Typography>
                             <Box css={css(classes.countBox)}>
                                 <Box css={css(classes.count)}>
@@ -200,12 +201,12 @@ export default function ProductDetail(){
                                     </IconButton>
                                 </Box>
                             </Box>
-                        </Stack>
+                        </Stack>:<Skeleton height='50px'/>}
                         <Divider />
-                        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
+                        {product&&<Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
                             <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(0, 171, 85)'}} onClick={formik.handleSubmit}>Add To Cart</Button>
                             <Button size="large" variant="contained" css={css(classes.btn)} sx={{backgroundColor: 'rgb(255, 171, 0)'}} component={RouterLink} to={`/prod/${id}/edit`}>Edit</Button>
-                        </Stack>
+                        </Stack>}
                     </Box>
                 </Grid>
             </Grid>
