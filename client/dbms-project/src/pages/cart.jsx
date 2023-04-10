@@ -208,10 +208,11 @@ export default function cart(){
     }
 
     const checkOut = () => {
-        axios.post('/order', {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
+        axios.post('/order', {}, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             console.log(response);
             dispatch(show("Ordered successfully"));
+            navigate('/orders');
         })
         .catch((err)=>{
             console.log(err);
