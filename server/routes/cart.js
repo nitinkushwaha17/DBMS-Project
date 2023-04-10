@@ -6,7 +6,7 @@ const {authorize, isCustomer} = require("../middlewares/auth");
 router.route('/')
 .get(authorize, isCustomer, async(req, res) => {
     try{
-        const products = await db.query('SELECT * FROM CART JOIN PRODUCT ON ID = PRODUCT_ID WHERE CUSTOMER_ID = $1', [1]);
+        const products = await db.query('SELECT * FROM CART JOIN PRODUCT ON ID = PRODUCT_ID WHERE CUSTOMER_ID = $1', [req.user.id]);
         res.status(200).json(products.rows);
     }
     catch(err){
@@ -29,7 +29,7 @@ router.route('/')
             return res.status(403).send("Product already in cart");
         }
         else{
-            const product = await db.query('INSERT INTO cart(customer_id, product_id, quantity) VALUES(1, $1, $2)', [req.body.product_id, req.body.quantity]);
+            const product = await db.query('INSERT INTO cart(customer_id, product_id, quantity) VALUES($1, $2, $3)', [req.user.id, req.body.product_id, req.body.quantity]);
         }
 
         return res.status(200).send("Product added to cart");
@@ -53,7 +53,7 @@ router.route('/:id')
             return res.status(400).send("Insufficient quantity available");
         }
 
-        const product = await db.query('UPDATE cart SET quantity = $1 where product_id = $2 AND customer_id=1', [req.body.quantity, req.params.id]);
+        const product = await db.query('UPDATE cart SET quantity = $1 where product_id = $2 AND customer_id=$3', [req.body.quantity, req.params.id, req.user.id]);
         // No row updated
         if(!product.rowCount){
             return res.status(404).send("Product not found");
@@ -67,7 +67,7 @@ router.route('/:id')
 })
 .delete(authorize, isCustomer, async(req, res) => {
     try{
-        const product = await db.query('DELETE FROM cart WHERE product_id=$1 AND customer_id=$2', [req.params.id, 1]);
+        const product = await db.query('DELETE FROM cart WHERE product_id=$1 AND customer_id=$2', [req.params.id, req.user.id]);
         console.log(product.rowCount)
         if(!product.rowCount){
             return res.status(204).send();

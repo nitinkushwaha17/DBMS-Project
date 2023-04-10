@@ -6,7 +6,7 @@ const {authorize, isCustomer} = require("../middlewares/auth");
 router.route('/')
 .get(authorize, isCustomer, async(req, res) => {
     try{
-        const orders = await db.query('SELECT * FROM orders JOIN order_items ON id=order_id JOIN product p ON p.id=product_id WHERE customer_id = $1 ORDER BY order_id DESC', [1]);
+        const orders = await db.query('SELECT * FROM orders JOIN order_items ON id=order_id JOIN product p ON p.id=product_id WHERE customer_id = $1 ORDER BY order_id DESC', [req.user.id]);
         res.status(200).json(orders.rows);
     }
     catch(err){
@@ -17,13 +17,13 @@ router.route('/')
 .post(authorize, isCustomer, async(req, res) => {
     try{
         // get cart items
-        const items = await db.query('SELECT * FROM cart JOIN (SELECT id, price FROM product) t ON t.id=product_id WHERE customer_id = $1', [1]);
+        const items = await db.query('SELECT * FROM cart JOIN (SELECT id, price FROM product) t ON t.id=product_id WHERE customer_id = $1', [req.user.id]);
         if(!items.rows.length){
             res.status(403).send("No items in cart");
         }
 
         // make order
-        const order = await db.query('INSERT INTO orders(customer_id, date) VALUES($1, $2) RETURNING id', [1, new Date()]);
+        const order = await db.query('INSERT INTO orders(customer_id, date) VALUES($1, $2) RETURNING id', [req.user.id, new Date()]);
         
         
         items.rows.forEach(async(item)=>{
@@ -33,7 +33,7 @@ router.route('/')
             await db.query('UPDATE product SET stock = stock - $1 where id = $2', [item.quantity, item.product_id]);
         });
 
-        await db.query('DELETE FROM cart WHERE customer_id = $1', [1]);
+        await db.query('DELETE FROM cart WHERE customer_id = $1', [req.user.id]);
 
         res.status(201).send("Order created");
     }

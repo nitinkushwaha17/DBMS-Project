@@ -31,8 +31,8 @@ router.route('/')
     console.log(req.body);
     try{
         // TODO: add supplier id
-        // const product = await db.query('INSERT INTO product(name, mrp, price, description, stock, img) VALUES($1, $2, $3, $4, $5, $6)', 
-        // [req.body.name, req.body.mrp, req.body.price, req.body.desc, req.body.stock, req.body.image]);
+        const product = await db.query('INSERT INTO product(name, mrp, price, description, stock, img, supplier_id) VALUES($1, $2, $3, $4, $5, $6, $7)', 
+        [req.body.name, req.body.mrp, req.body.price, req.body.desc, req.body.stock, req.body.image, req.user.id]);
         // console.log(product);
         res.status(201).send("Product created successfully");
     }
@@ -45,7 +45,7 @@ router.route('/')
 router.route('/:id')
 .get(async(req, res) => {
     try{
-        const product = await db.query(`SELECT * FROM product where id = ${req.params.id}`);
+        const product = await db.query(`SELECT * FROM product where id = $1`, [req.params.id]);
         if(!product.rows.length){
             return res.status(404).send("Product not found");
         }
@@ -57,8 +57,8 @@ router.route('/:id')
 })
 .put(authorize, isSupplier, async(req, res)=>{
     try{
-        const product = await db.query("UPDATE product SET name = $1, description = $2, mrp = $3, price = $4, stock = $5, img = $6 WHERE id = $7",
-        [req.body.name, req.body.desc, req.body.mrp, req.body.price, req.body.stock, req.body.image, req.params.id]);
+        const product = await db.query("UPDATE product SET name = $1, description = $2, mrp = $3, price = $4, stock = $5, img = $6 WHERE id = $7 AND supplier_id = $8",
+        [req.body.name, req.body.desc, req.body.mrp, req.body.price, req.body.stock, req.body.image, req.params.id, req.user.id]);
         if(!product.rowCount){
             return res.status(404).send("product not found");
         }
