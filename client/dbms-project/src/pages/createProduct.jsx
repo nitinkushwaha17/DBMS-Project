@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import ProductForm from "../components/productForm";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const classes = {
     heading: `
@@ -22,6 +23,8 @@ const classes = {
 }
 
 export default function CreateProduct(){
+    const navigate = useNavigate();
+    
     const formik = useFormik({
         initialValues: {
           name: '',
@@ -33,11 +36,14 @@ export default function CreateProduct(){
         },
         onSubmit: (values) => {
           console.log(values);
-          axios.post('/products', values)
+          axios.post('/products', values, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
           .then((response)=>{
               console.log(response);
           }).catch((err) => {
               console.log(err);
+              if(err.response.status === 401){
+                navigate('/login');
+              }
           })
         },
     });

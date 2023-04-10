@@ -6,6 +6,7 @@ import ProductList from '../components/productList'
 import ProductSort from '../components/ProductSort'
 import ProductFilterSidebar from '../components/productFilterSidebar';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 // mock
 // import PRODUCTS from '../_mock/products';
 
@@ -14,11 +15,17 @@ import axios from 'axios';
 export default function ProductsPage() {
   const [openFilter, setOpenFilter] = useState(false);
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+
 
   useEffect(()=>{
-    axios.get('/products')
-    .then(response=>setProducts(response.data))
-    .catch(err => console.error(err));
+    axios.get('/products', {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
+    .then(response=>{
+      setProducts(response.data);
+    })
+    .catch(err => {
+      console.error(err);
+    });
   }, []);
 
   const handleOpenFilter = () => {

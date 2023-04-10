@@ -30,7 +30,7 @@ export default function ProductSort(props) {
     setSelectedIndex(index);
     handleClose();
 
-    axios.get(`/products?sortby=${SORT_BY_OPTIONS[index].value}`)
+    axios.get(`/products?sortby=${SORT_BY_OPTIONS[index].value}`, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
     .then(response=>setProducts(response.data))
     .catch(err => console.error(err));
   };

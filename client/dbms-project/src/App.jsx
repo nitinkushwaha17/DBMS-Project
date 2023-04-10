@@ -25,6 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { close } from './features/snackbarSlice';
 
 axios.defaults.baseURL = process.env.NODE_ENV==='production'?"https://dbms-project-server.onrender.com/api/v1":"http://localhost:3002/api/v1/";
+// axios.defaults.headers.common = {'Authorization': `bearer ${localStorage.getItem('token')}`};
 
 function App() {
   const dispatch = useDispatch();

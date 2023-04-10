@@ -5,7 +5,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
@@ -104,6 +104,7 @@ const options = ['Option 1', 'Option 2'];
 
 export default function ProductDetail(){
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [color, setColor] = useState("red");
     const [size, setSize] = useState(5);
@@ -116,7 +117,7 @@ export default function ProductDetail(){
     }
 
     useEffect(()=>{
-        axios.get(`/products/${id}`)
+        axios.get(`/products/${id}`, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>setProduct(response.data))
         .catch((error)=>console.error(error))
     }, []);
@@ -128,12 +129,15 @@ export default function ProductDetail(){
         },
         onSubmit: (values) => {
           console.log(values);
-          axios.post('/cart', values)
+          axios.post('/cart', values, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
           .then((response)=>{
               console.log(response);
               dispatch(show("Product added to cart"));
           }).catch((err) => {
               console.log(err);
+              if(err.response.status === 401){
+                navigate('/login');
+              }
           })
         },
     });

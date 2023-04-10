@@ -33,7 +33,7 @@ export default function EditProduct(){
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
-        axios.get(`/products/${id}`)
+        axios.get(`/products/${id}`, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then(response => {
             console.log(response);
             setProduct(response.data);
@@ -53,13 +53,16 @@ export default function EditProduct(){
         },
         onSubmit: (values) => {
           console.log(values);
-          axios.put(`/products/${product.id}`, values)
+          axios.put(`/products/${product.id}`, values, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
           .then((response)=>{
               console.log(response);
               dispatch(show("Product updated"));
               navigate(`/prod/${product.id}`);
           }).catch((err) => {
               console.log(err);
+              if(err.response.status === 401){
+                navigate('/login');
+              }
           })
         },
         enableReinitialize: true

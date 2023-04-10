@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { show } from '../features/snackbarSlice';
+import { useNavigate } from 'react-router-dom';
 
 const classes = {
     heading: `
@@ -145,17 +146,23 @@ const classes = {
 
 export default function cart(){
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [subTotal, setSubTotal] = useState(0);
     const [changingQuantity, setChangingQuantity] = useState(false);
 
     useEffect(()=>{
-        axios.get('/cart')
+        axios.get('/cart', {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             setProducts(response.data);
         })
-        .catch((error)=>{console.log(error)})
+        .catch((err)=>{
+            console.log(err);
+            if(err.response.status === 401){
+                navigate('/login');
+            }
+        })
         .finally(()=>{setLoading(false)});
     }, []);
     
@@ -165,18 +172,23 @@ export default function cart(){
 
     const handleDelete = (product_id) => {
         console.log(product_id)
-        axios.delete(`/cart/${product_id}`)
+        axios.delete(`/cart/${product_id}`, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             console.log(response)
             const remainingProducts = products.filter((product) => product_id !== product.id);
             setProducts(remainingProducts);
         })
-        .catch((error)=>{console.log(error)});
+        .catch((err)=>{
+            console.log(err);
+            if(err.response.status === 401){
+                navigate('/login');
+            }
+        });
     }
 
     const changeQuantity = (product, val) => {
         setChangingQuantity(true);
-        axios.put(`/cart/${product.id}`, {quantity: product.quantity+val})
+        axios.put(`/cart/${product.id}`, {quantity: product.quantity+val}, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             console.log(response)
             if(response.status==200){
@@ -186,17 +198,27 @@ export default function cart(){
                 setProducts([...products.slice(0, idx), updatedProduct, ...products.slice(idx+1)]);
             }
         })
-        .catch((err)=>{console.log(err)})
+        .catch((err)=>{
+            console.log(err);
+            if(err.response.status === 401){
+                navigate('/login');
+            }
+        })
         .finally(()=>{setChangingQuantity(false)});
     }
 
     const checkOut = () => {
-        axios.post('/order')
+        axios.post('/order', {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             console.log(response);
             dispatch(show("Ordered successfully"));
         })
-        .catch((err)=>{console.log(err)});
+        .catch((err)=>{
+            console.log(err);
+            if(err.response.status === 401){
+                navigate('/login');
+            }
+        });
     }
     
     return(

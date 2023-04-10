@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const {authorize, isCustomer} = require("../middlewares/auth");
 
 router.route('/')
-.get(async(req, res) => {
+.get(authorize, isCustomer, async(req, res) => {
     try{
         const orders = await db.query('SELECT * FROM orders JOIN order_items ON id=order_id JOIN product p ON p.id=product_id WHERE customer_id = $1 ORDER BY order_id DESC', [1]);
         res.status(200).json(orders.rows);
@@ -13,7 +14,7 @@ router.route('/')
         res.status(500).send(err.message);
     }
 })
-.post(async(req, res) => {
+.post(authorize, isCustomer, async(req, res) => {
     try{
         // get cart items
         const items = await db.query('SELECT * FROM cart JOIN (SELECT id, price FROM product) t ON t.id=product_id WHERE customer_id = $1', [1]);

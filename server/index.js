@@ -6,7 +6,6 @@ const express = require('express');
 const app = express();
 var cors = require('cors')
 const db = require('./db');
-const auth = require('./middlewares/auth');
 
 const port = process.env.PORT || 3002;
 
@@ -20,7 +19,7 @@ app.use('/api/v1/products', require('./routes/product'));
 app.use('/api/v1/cart', require('./routes/cart'));
 app.use('/api/v1/order', require('./routes/order'));
 
-app.get('/user', auth, async(req,res)=>{
+app.get('/user', async(req,res)=>{
     console.log(req.user);
 });
 app.get('/', async(req,res)=>{

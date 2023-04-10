@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const {authorize, isSupplier} = require("../middlewares/auth");
 
 router.route('/')
 .get(async(req, res) => {
@@ -26,7 +27,7 @@ router.route('/')
         res.status(500).send(err.message);
     }
 })
-.post(async(req, res) => {
+.post(authorize, isSupplier, async(req, res) => {
     console.log(req.body);
     try{
         // TODO: add supplier id
@@ -54,7 +55,7 @@ router.route('/:id')
         res.status(500).send(err.message);
     }
 })
-.put(async(req, res)=>{
+.put(authorize, isSupplier, async(req, res)=>{
     try{
         const product = await db.query("UPDATE product SET name = $1, description = $2, mrp = $3, price = $4, stock = $5, img = $6 WHERE id = $7",
         [req.body.name, req.body.desc, req.body.mrp, req.body.price, req.body.stock, req.body.image, req.params.id]);

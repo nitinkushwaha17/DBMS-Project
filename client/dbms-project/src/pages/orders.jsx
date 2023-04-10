@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { Grid, Card, CardContent, Typography, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Container, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const classes = {
     heading: `
@@ -89,12 +90,19 @@ export default function orders(){
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const navigate = useNavigate();
+
     useEffect(()=>{
-        axios.get('/order')
+        axios.get('/order', {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             setProducts(response.data);
         })
-        .catch((error)=>{console.log(error)})
+        .catch((err)=>{
+            console.log(err);
+            if(err.response.status === 401){
+                navigate('/login');
+              }
+        })
         .finally(()=>{setLoading(false)});
     }, []);
     
