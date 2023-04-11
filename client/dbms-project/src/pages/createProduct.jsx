@@ -5,6 +5,8 @@ import { useFormik } from 'formik';
 import ProductForm from "../components/productForm";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { show } from '../features/snackbarSlice';
 
 const classes = {
     heading: `
@@ -24,7 +26,8 @@ const classes = {
 
 export default function CreateProduct(){
     const navigate = useNavigate();
-    
+    const dispatch = useDispatch();
+
     const formik = useFormik({
         initialValues: {
           name: '',
@@ -39,6 +42,7 @@ export default function CreateProduct(){
           axios.post('/products', values, {headers:{'Authorization': `bearer ${localStorage.getItem('token')}`}})
           .then((response)=>{
               console.log(response);
+              dispatch(show("Product created"));
           }).catch((err) => {
               console.log(err);
               if(err.response.status === 401){
